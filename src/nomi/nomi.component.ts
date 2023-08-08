@@ -8,7 +8,7 @@ import * as THREE from 'three';
 })
 export class NomiComponent implements OnInit {
   title = 'Nomi';
-  domWidth: number = window.innerWidth;
+  domWidth: number = window.innerWidth - 20;
   domHeight: number = 500;
 
   ngOnInit(): void {
@@ -114,11 +114,11 @@ export class NomiComponent implements OnInit {
           // vec2 gridUv = vec2(floor(vUv.x * 10.0) / 10.0, floor((vUv.y + vUv.x) * 10.0) / 10.0);
           // float strength = random(gridUv); 
 
-         // float strength = 0.015 / distance(vUv, vec2(0.5)); //光晕效果
+        //  float strength = 0.015 / distance(vUv, vec2(0.5)); //光晕效果
 
-            // vec2 rotatedUv = rotate(vUv, PI * 0.25, vec2(0.5));
-            // float strength = 0.015 / distance(vec2(rotatedUv.x,(rotatedUv.y - 0.5)*5.0 + 0.5), vec2(0.5));
-            // strength *= 0.015 / distance(vec2(rotatedUv.y,(rotatedUv.x - 0.5)*5.0 + 0.5), vec2(0.5));
+            vec2 rotatedUv = rotate(vUv, PI * 0.25, vec2(0.5));
+            float strength = 0.015 / distance(vec2(rotatedUv.x,(rotatedUv.y - 0.5)*5.0 + 0.5), vec2(0.5));
+            strength *= 0.015 / distance(vec2(rotatedUv.y,(rotatedUv.x - 0.5)*5.0 + 0.5), vec2(0.5));
 
 
           //  vec2 waveUv = vec2(vUv.x + sin(vUv.y * 30.0) * 0.1, vUv.y + sin(vUv.x * 30.0) * 0.1);
@@ -127,12 +127,12 @@ export class NomiComponent implements OnInit {
           // float angle = atan(vUv.x - 0.5,vUv.y - 0.5)/(PI * 2.0) + 0.5;
           // float strength = mod(angle * 20.0, 1.0);
 
-          float strength = step(0.9,sin(cnoise(vUv*uOpacity) * 30.0));
-          vec3 blackColor = vec3(0.0);
-          vec3 uvColor = vec3(vUv, 0.2);
-          vec3 mixColor = mix(blackColor, uvColor, strength);
+          // float strength = step(0.9,sin(cnoise(vUv*uOpacity) * 30.0));
+          // vec3 blackColor = vec3(0.0);
+          // vec3 uvColor = vec3(vUv, 0.2);
+          // vec3 mixColor = mix(blackColor, uvColor, strength);
 
-          gl_FragColor = vec4(vec3(mixColor), 1.0);
+          gl_FragColor = vec4(vec3(strength), 1.0);
         }
       `,
       side: THREE.DoubleSide,
