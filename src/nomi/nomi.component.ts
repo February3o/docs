@@ -8,8 +8,8 @@ import * as THREE from 'three';
 })
 export class NomiComponent implements OnInit {
   title = 'Nomi';
-  domWidth: number = 50;//window.innerWidth - 20;
-  domHeight: number = 50;
+  domWidth: number = window.innerWidth - 20;
+  domHeight: number = 150;
 
   ngOnInit(): void {
     this.init();
@@ -38,10 +38,14 @@ export class NomiComponent implements OnInit {
       uniforms: {
         uOpacity: {
           value: 50
+        },
+        uTime: {
+          value: 0.1
         }
       },
       vertexShader: `
         varying vec2 vUv;
+        uniform float uTime;
         void main() {
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           vUv = uv;
@@ -49,6 +53,7 @@ export class NomiComponent implements OnInit {
       fragmentShader: `
         #define PI 3.1415926535897932384626433832795
         varying vec2 vUv;
+        
         float random(vec2 st) {
           return fract(sin(dot(st.xy,vec2(12.9898,78.233))) * 43758.5453123);
         }
@@ -101,6 +106,7 @@ export class NomiComponent implements OnInit {
         }
 
         uniform float uOpacity;
+        uniform float uTime;
         void main() {
           // float barX = step(0.4, mod(vUv.x * 10.0 - 0.2, 1.0)) * step(0.8, mod(vUv.y * 10.0, 1.0));
           // float barY = step(0.8, mod(vUv.x * 10.0, 1.0)) * step(0.4, mod(vUv.y * 10.0 - 0.2, 1.0));
@@ -116,9 +122,10 @@ export class NomiComponent implements OnInit {
 
         //  float strength = 0.015 / distance(vUv, vec2(0.5)); //光晕效果
 
-            vec2 rotatedUv = rotate(vUv, PI * 0.25, vec2(0.5));
-            float strength = 0.015 / distance(vec2(rotatedUv.x,(rotatedUv.y - 0.5)*5.0 + 0.5), vec2(0.5));
-            strength *= 0.015 / distance(vec2(rotatedUv.y,(rotatedUv.x - 0.5)*5.0 + 0.5), vec2(0.5));
+            vec2 rotatedUv = rotate(vUv, PI*0.25, vec2(0.5));
+            float animation = mix(0.005, 0.05, (sin(uTime) + 1.0) * 0.5);
+            float strength = animation / distance(vec2(rotatedUv.x,(rotatedUv.y - 0.5)*5.0 + 0.5), vec2(0.5));
+            strength *= animation / distance(vec2(rotatedUv.y,(rotatedUv.x - 0.5)*5.0 + 0.5), vec2(0.5));
 
 
           //  vec2 waveUv = vec2(vUv.x + sin(vUv.y * 30.0) * 0.1, vUv.y + sin(vUv.x * 30.0) * 0.1);
@@ -154,7 +161,7 @@ export class NomiComponent implements OnInit {
     function animation(time: any) {
 
 
-
+      planeMateria.uniforms['uTime'].value += 0.05;
       renderer.render(scene, camera);
 
     }
