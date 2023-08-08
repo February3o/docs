@@ -8,8 +8,8 @@ import * as THREE from 'three';
 })
 export class NomiComponent implements OnInit {
   title = 'Nomi';
-  domWidth: number = window.innerWidth - 20;
-  domHeight: number = 500;
+  domWidth: number = 50;//window.innerWidth - 20;
+  domHeight: number = 50;
 
   ngOnInit(): void {
     this.init();
