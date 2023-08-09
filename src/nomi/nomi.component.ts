@@ -28,8 +28,8 @@ export class NomiComponent implements OnInit {
 
     // const mesh = new THREE.Mesh(geometry, material);
     // scene.add(mesh);
-    const light = new THREE.AmbientLight(0xdeedff, 1.5)
-    scene.add(light)
+    // const light = new THREE.AmbientLight(0xdeedff, 1.5)
+    // scene.add(light)
 
 
 
@@ -139,7 +139,7 @@ export class NomiComponent implements OnInit {
           // vec3 uvColor = vec3(vUv, 0.2);
           // vec3 mixColor = mix(blackColor, uvColor, strength);
 
-          gl_FragColor = vec4(vec3(strength), 1.0);
+          gl_FragColor = vec4(vec3(strength * vec3(0.5, 0.7, 0.9)), 1.0);
         }
       `,
       side: THREE.DoubleSide,
@@ -152,6 +152,7 @@ export class NomiComponent implements OnInit {
 
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setClearColor(new THREE.Color(0xffffff));
     renderer.setSize(this.domWidth, this.domHeight);
     renderer.setAnimationLoop(animation);
     const dom = document.getElementById('nomi-container')?.appendChild(renderer.domElement);
@@ -160,8 +161,7 @@ export class NomiComponent implements OnInit {
 
     function animation(time: any) {
 
-
-      planeMateria.uniforms['uTime'].value += 0.05;
+      planeMateria.uniforms['uTime'].value += 0.02;
       renderer.render(scene, camera);
 
     }
