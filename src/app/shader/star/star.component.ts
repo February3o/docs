@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import * as THREE from 'three';
 
 @Component({
-  selector: 'app-nomi',
-  templateUrl: './nomi.component.html',
-  styleUrls: ['./nomi.component.less']
+  selector: 'app-star',
+  templateUrl: './star.component.html',
+  styleUrls: ['./star.component.less']
 })
-export class NomiComponent implements OnInit {
-  title = 'Nomi';
+export class StarComponent implements OnInit {
+  title = 'star';
   domWidth: number = window.innerWidth - 20;
   domHeight: number = 150;
 
@@ -108,38 +108,14 @@ export class NomiComponent implements OnInit {
         uniform float uOpacity;
         uniform float uTime;
         void main() {
-          // float barX = step(0.4, mod(vUv.x * 10.0 - 0.2, 1.0)) * step(0.8, mod(vUv.y * 10.0, 1.0));
-          // float barY = step(0.8, mod(vUv.x * 10.0, 1.0)) * step(0.4, mod(vUv.y * 10.0 - 0.2, 1.0));
-          // float strength = barX + barY;
-
-          // float strength = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-          // strength *= 1.0 - step(0.25, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-
-          // float strength = floor(vUv.x * 10.0) / 10.0 * floor(vUv.y * 10.0) / 10.0;
-
-          // vec2 gridUv = vec2(floor(vUv.x * 10.0) / 10.0, floor((vUv.y + vUv.x) * 10.0) / 10.0);
-          // float strength = random(gridUv); 
-
-        //  float strength = 0.015 / distance(vUv, vec2(0.5)); //光晕效果
 
             vec2 rotatedUv = rotate(vUv, PI*0.25, vec2(0.5));
             float animation = mix(0.005, 0.05, (sin(uTime) + 1.0) * 0.5);
             float strength = animation / distance(vec2(rotatedUv.x,(rotatedUv.y - 0.5)*5.0 + 0.5), vec2(0.5));
             strength *= animation / distance(vec2(rotatedUv.y,(rotatedUv.x - 0.5)*5.0 + 0.5), vec2(0.5));
-
-
-          //  vec2 waveUv = vec2(vUv.x + sin(vUv.y * 30.0) * 0.1, vUv.y + sin(vUv.x * 30.0) * 0.1);
-          // float strength = 1.0 - step(0.01, abs(distance(waveUv, vec2(0.5)) - 0.25)); //波浪效果
-
-          // float angle = atan(vUv.x - 0.5,vUv.y - 0.5)/(PI * 2.0) + 0.5;
-          // float strength = mod(angle * 20.0, 1.0);
-
-          // float strength = step(0.9,sin(cnoise(vUv*uOpacity) * 30.0));
-          // vec3 blackColor = vec3(0.0);
-          // vec3 uvColor = vec3(vUv, 0.2);
-          // vec3 mixColor = mix(blackColor, uvColor, strength);
-
-          gl_FragColor = vec4(vec3(strength * vec3(0.5, 0.7, 0.9)), 1.0);
+            vec3 adjustedColor = vec3(0.5, 0.7, 0.9);
+              
+            gl_FragColor = vec4(vec3(adjustedColor * strength ), 1.0);
         }
       `,
       side: THREE.DoubleSide,
@@ -155,7 +131,7 @@ export class NomiComponent implements OnInit {
     renderer.setClearColor(new THREE.Color(0xffffff));
     renderer.setSize(this.domWidth, this.domHeight);
     renderer.setAnimationLoop(animation);
-    const dom = document.getElementById('nomi-container')?.appendChild(renderer.domElement);
+    const dom = document.getElementById('star-container')?.appendChild(renderer.domElement);
 
     // animation
 

@@ -3,16 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NomiComponent } from '../nomi/nomi.component';
+import { ShaderModule } from './shader/shader.module';
+import { IndexComponent } from './index/index.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NomiComponent
+    IndexComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ShaderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
