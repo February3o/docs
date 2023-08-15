@@ -12,7 +12,7 @@ export class StarComponent implements OnInit {
   }
   title = 'star';
   domWidth: number = window.innerWidth - 20;
-  domHeight: number = 150;
+  domHeight: number = window.innerHeight - 20;
 
   vertexShader: string = `
         //vertexShader
@@ -35,7 +35,7 @@ export class StarComponent implements OnInit {
         uniform float uTime;
         void main() {
             vec2 rotatedUv = rotate(vUv, PI*0.25, vec2(0.5));
-            float animation = mix(0.005, 0.05, (sin(uTime) + 1.0) * 0.5);
+            float animation = mix(0.001, 0.01, (sin(uTime) + 1.0) * 0.5);
             float strength = animation / distance(vec2(rotatedUv.x,(rotatedUv.y - 0.5)*5.0 + 0.5), vec2(0.5));
             strength *= animation / distance(vec2(rotatedUv.y,(rotatedUv.x - 0.5)*5.0 + 0.5), vec2(0.5));
             vec3 adjustedColor = vec3(0.5, 0.7, 0.9);
