@@ -1,3 +1,12 @@
-<div id="cube">
+<div class="flex-box">
+
+    <div id="cube-container">
+    </div>
+</div>
+<div class="terminal">
+    <div style="overflow: auto;">
+        <markdown [data]="vertexShader | language : 'c'"></markdown>
+        <markdown [data]="fragmentShader | language : 'c'"></markdown>
+    </div>
 
 </div>

@@ -37,6 +37,49 @@ export class CubeComponent implements OnInit {
   clock!: Clock;
   orbit_controls!: OrbitControls;
 
+  vertexShader: string = `
+                          //vertexShader
+                          precision highp float;
+                          varying vec2 vUv;
+                          varying vec3 vPosition;
+                          uniform float uTime;
+                          varying vec3 vNormal;
+                          void main() {
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                            vUv = uv;
+                            vPosition = position;
+                            vNormal = normalize(normalMatrix * normal);
+                        }`;
+  fragmentShader: string = `
+                        //fragmentShader
+                        precision highp float;
+                        uniform vec3 scanColor;
+                        varying vec2 vUv;
+                        uniform float uTime;
+                        uniform vec3 uSize;
+                        varying vec3 vPosition;
+                        varying vec3 vNormal;
+                        void main() {
+                          
+                          float y = (vPosition.y / uSize.y)+0.5;
+                          float color = sin(-vUv.y + uTime*0.1 )*1.0;
+                          color = mod(color, 1.0);
+                          color = step(0.02, color);
+                          if(y < 0.01 || y > 0.99) {
+                            color = 1.0;
+                          }
+                          float alpha = 1.0-sin(vUv.y)*0.7;
+
+                          vec3 lightDirection = normalize(vec3(0.9, 1.0, 0.8)); // 光源方向
+                          float lightIntensity = max(dot(vNormal, lightDirection), 0.0); // 光照强度
+                          vec3 lightColor = vec3(1.0, 1.0, 1.0); // 光源颜色
+                          vec3 finalColor = vec3(color, 1.0, color) * lightColor * lightIntensity;
+
+                          gl_FragColor = vec4(finalColor, alpha);
+                          
+                        }
+                      `
+
   constructor(private threeService: ThreeService) { }
 
   ngOnInit(): void {
@@ -65,8 +108,9 @@ export class CubeComponent implements OnInit {
     plane.receiveShadow = true;
 
     for (let i = 0; i < 18; i++) {
-      const height = Number(Math.random() * 2).toFixed(2)
-      const cubeGeometry = new BoxGeometry(Math.random() * 2, Number(height), Math.random() * 2);
+      const step = 1;
+      const height = Number(Math.random() * step).toFixed(2)
+      const cubeGeometry = new BoxGeometry(Math.random() * step, Number(height), Math.random() * step);
       // const cubeMaterial = new MeshStandardMaterial({ color: 0x00ff00, });
       cubeGeometry.computeBoundingBox();
 
@@ -89,41 +133,8 @@ export class CubeComponent implements OnInit {
           },
           scanColor: { value: new Color(0x00ff00) }  // 扫描颜色
         },
-        vertexShader:
-          `varying vec2 vUv;
-          varying vec3 vPosition;
-          uniform float uTime;
-          void main() {
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            vUv = uv;
-            vPosition = position;
-        }`,
-        fragmentShader: `
-        //fragmentShader
-          uniform vec3 scanColor;
-          varying vec2 vUv;
-          uniform float uTime;
-          uniform vec3 uSize;
-          varying vec3 vPosition;
-          void main() {
-            
-
-            // 计算当前片段所在的垂直位置（0.0到1.0）
-            float verticalPosition = vPosition.y / uSize.y;
-            
-            // 根据时间和垂直位置计算扫描动画的偏移量
-            float scanOffset =sin((uTime*0.4 - verticalPosition) *10.0);
-            
-            // 根据偏移量将扫描线限制在0.0到1.0之间
-            float sacnWidth = 1.0;
-            float scanLine = clamp(scanOffset, 0.0, sacnWidth);
-            
-            // 根据扫描线位置和指定的颜色进行颜色混合
-            vec3 finalColor = mix(vec3(1.0), scanColor, scanLine / sacnWidth);
-            
-            gl_FragColor = vec4(finalColor, 1.0);
-          }
-        `,
+        vertexShader: this.vertexShader,
+        fragmentShader: this.fragmentShader,
       })
       const cubeMesh = new Mesh(cubeGeometry, cubeMaterial);
       cubeMesh.position.set(Math.random() * 2, Number(height) / 2, Math.random() * 2);

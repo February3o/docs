@@ -18,6 +18,8 @@ export class ThreeService {
   camera!: PerspectiveCamera;
   clock!: Clock;
   orbit_controls!: OrbitControls;
+  domWidth: number = window.innerWidth - 20;
+  domHeight: number = window.innerHeight - 20;
 
   constructor() { }
 
@@ -46,7 +48,7 @@ export class ThreeService {
 
   private _initCamera() {
     this.camera.fov = 55;
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.aspect = this.domWidth / this.domHeight;
     this.camera.near = 0.1;
     this.camera.far = 1000;
     this.camera.position.set(3, 3, 3);
@@ -57,18 +59,18 @@ export class ThreeService {
     this.renderer.shadowMap.enabled = true;
     this.renderer.outputColorSpace = SRGBColorSpace;
     this.renderer.toneMapping = ACESFilmicToneMapping;
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.domElement.style.position = "absolute";
-    this.renderer.domElement.style.zIndex = "1";
-    this.renderer.domElement.style.top = "0px";
-    document.querySelector("#cube")?.appendChild(this.renderer.domElement);
+    this.renderer.setSize(this.domWidth, this.domHeight);
+    // this.renderer.domElement.style.position = "absolute";
+    // this.renderer.domElement.style.zIndex = "1";
+    // this.renderer.domElement.style.top = "0px";
+    document.getElementById("cube-container")?.appendChild(this.renderer.domElement);
   }
 
   private _initResponsiveResize() {
     window.addEventListener("resize", () => {
-      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.aspect = this.domWidth / this.domHeight;
       this.camera.updateProjectionMatrix();
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setSize(this.domWidth, this.domHeight);
       this.renderer.setPixelRatio(window.devicePixelRatio);
     });
   }
