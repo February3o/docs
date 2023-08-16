@@ -39,7 +39,7 @@ export class CubeComponent implements OnInit {
 
   vertexShader: string = `
                           //vertexShader
-                          precision highp float;
+                          precision lowp float;
                           varying vec2 vUv;
                           varying vec3 vPosition;
                           uniform float uTime;
@@ -52,7 +52,7 @@ export class CubeComponent implements OnInit {
                         }`;
   fragmentShader: string = `
                         //fragmentShader
-                        precision highp float;
+                        precision lowp float;
                         uniform vec3 scanColor;
                         varying vec2 vUv;
                         uniform float uTime;
@@ -61,20 +61,19 @@ export class CubeComponent implements OnInit {
                         varying vec3 vNormal;
                         void main() {
                           
-                          float y = (vPosition.y / uSize.y)+0.5;
-                          float color = sin(-vUv.y + uTime*0.1 )*1.0;
+                          float y = (vPosition.y / uSize.y) + 0.5;
+                          float color = sin(-vUv.y + uTime * 0.3);
                           color = mod(color, 1.0);
                           color = step(0.02, color);
-                          if(y < 0.01 || y > 0.99) {
-                            color = 1.0;
-                          }
-                          float alpha = 1.0-sin(vUv.y)*0.7;
+                          if(y < 0.01 || y > 0.99) 
+                          color = 1.0;
+                          float alpha = 1.0 - sin(vUv.y) * 0.7;
 
                           vec3 lightDirection = normalize(vec3(0.9, 1.0, 0.8)); // 光源方向
                           float lightIntensity = max(dot(vNormal, lightDirection), 0.0); // 光照强度
                           vec3 lightColor = vec3(1.0, 1.0, 1.0); // 光源颜色
-                          vec3 finalColor = vec3(color, 1.0, color) * lightColor * lightIntensity;
 
+                          vec3 finalColor = vec3(color, 1.0, color) * lightColor * lightIntensity;
                           gl_FragColor = vec4(finalColor, alpha);
                           
                         }
