@@ -117,11 +117,10 @@ export class ShanghaiComponent implements OnInit {
     this.renderer.shadowMap.enabled = true;
     this.scene.add(light);
     const loader = new FBXLoader()
-    // this.camera.fov = 120;
     this.camera.far = 10000;
     this.camera.position.set(1500, 800, 2000);
     this.camera.updateProjectionMatrix();
-    loader.load('/assets/model/shanghai.FBX', (scene) => {
+    loader.load('../../../assets/model/shanghai.FBX', (scene) => { //
       this.scene.add(scene);
       scene.traverse(child => {
         if (child.name === 'CITY_UNTRIANGULATED') {
