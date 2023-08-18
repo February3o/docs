@@ -63,7 +63,7 @@ export class ThreeService {
     // this.renderer.domElement.style.position = "absolute";
     // this.renderer.domElement.style.zIndex = "1";
     // this.renderer.domElement.style.top = "0px";
-    document.getElementById("cube-container")?.appendChild(this.renderer.domElement);
+    // document.getElementById("cube-container")?.appendChild(this.renderer.domElement);
   }
 
   private _initResponsiveResize() {

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ShaderComponent } from './shader.component';
 import { StarComponent } from './star/star.component';
 import { CubeComponent } from './cube/cube.component';
+import { ShanghaiComponent } from './shanghai/shanghai.component';
 const routes: Routes = [
   // {
   //   path: '', redirectTo: '/', pathMatch: 'full',
@@ -18,6 +19,10 @@ const routes: Routes = [
       {
         path: "cube",
         component: CubeComponent
+      },
+      {
+        path: "shanghai",
+        component: ShanghaiComponent
       }
     ]
   },

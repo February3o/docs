@@ -22,5 +22,4 @@ void main(){
     vec3 lightColor=vec3(1.,1.,1.);// 光源颜色
     vec3 finalColor=vec3(color,1.,color)*lightColor*lightIntensity;
     gl_FragColor=vec4(finalColor,alpha);
-    
 }

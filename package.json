@@ -25,6 +25,7 @@
     "ngx-code-editor": "^0.0.19",
     "ngx-markdown": "13.1.0",
     "prismjs": "^1.28.0",
+    "raw-loader": "^4.0.2",
     "rxjs": "~7.5.0",
     "three": "^0.155.0",
     "tslib": "^2.3.0",

@@ -23,14 +23,15 @@ import {
   Vector3,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader"
 // import vertexShader from '!!raw-loader!../glsl/cube-glsl/vertexShader.glsl';
 
 @Component({
-  selector: 'app-cube',
-  templateUrl: './cube.component.html',
-  styleUrls: ['./cube.component.less']
+  selector: 'app-shanghai',
+  templateUrl: './shanghai.component.html',
+  styleUrls: ['./shanghai.component.less']
 })
-export class CubeComponent implements OnInit {
+export class ShanghaiComponent implements OnInit {
 
   scene!: Scene;
   renderer!: WebGLRenderer;
@@ -62,20 +63,20 @@ export class CubeComponent implements OnInit {
                         varying vec3 vNormal;
                         void main() {
                           
-                          float y = (vPosition.y / uSize.y) + 0.5;
-                          float color = sin(-vUv.y + uTime * 0.3);
-                          color = mod(color, 1.0);
-                          color = step(0.02, color);
-                          if(y < 0.01 || y > 0.99) 
+                          float y = (vPosition.z / uSize.z);
+                          float color = sin(vUv.y + uTime * 0.3);
+                          // color = mod(color, 1.0);
+                          // color = step(0.02, color);
+                          if(y < 0.001 || y > 0.99) 
                           color = 1.0;
-                          float alpha = 1.0 - sin(vUv.y) * 0.7;
+                          // float alpha = 1.0 - sin(vUv.y) * 0.7;
 
                           vec3 lightDirection = normalize(vec3(0.9, 1.0, 0.8)); // 光源方向
                           float lightIntensity = max(dot(vNormal, lightDirection), 0.0); // 光照强度
                           vec3 lightColor = vec3(1.0, 1.0, 1.0); // 光源颜色
 
                           vec3 finalColor = vec3(color, 1.0, color) * lightColor * lightIntensity;
-                          gl_FragColor = vec4(finalColor, alpha);
+                          gl_FragColor = vec4(finalColor, 1.0);
                           
                         }
                       `
@@ -89,6 +90,7 @@ export class CubeComponent implements OnInit {
     this.renderer = renderer;
     this.orbit_controls = orbit_controls;
     this.clock = clock;
+
     this.updaetScene();
     this.renderer.render(this.scene, this.camera);
     this.orbit_controls.update()
@@ -97,7 +99,7 @@ export class CubeComponent implements OnInit {
   }
 
   updaetScene() {
-    const axis = new AxesHelper(30);
+    const axis = new AxesHelper(2000);
     this.scene.add(axis);
 
     const planeGeometry = new PlaneGeometry(5, 5);
@@ -107,66 +109,88 @@ export class CubeComponent implements OnInit {
     plane.position.set(0, 0, 0);
     plane.receiveShadow = true;
 
-    for (let i = 0; i < 18; i++) {
-      const step = 1;
-      const height = Number(Math.random() * step).toFixed(2)
-      const cubeGeometry = new BoxGeometry(Math.random() * step, Number(height), Math.random() * step);
-      // const cubeMaterial = new MeshStandardMaterial({ color: 0x00ff00, });
-      cubeGeometry.computeBoundingBox();
-
-      const { max, min } = <Box3>cubeGeometry.boundingBox;
-      const size = new Vector3(
-        max.x - min.x,
-        max.y - min.y,
-        max.z - min.z
-      );
-      const cubeMaterial = new ShaderMaterial({
-        uniforms: {
-          uOpacity: {
-            value: 50
-          },
-          uTime: {
-            value: 0.1
-          },
-          uSize: {
-            value: size
-          },
-          scanColor: { value: new Color(0x00ff00) }  // 扫描颜色
-        },
-        vertexShader: this.vertexShader,
-        fragmentShader: this.fragmentShader,
-      })
-      const cubeMesh = new Mesh(cubeGeometry, cubeMaterial);
-      cubeMesh.position.set(Math.random() * 2, Number(height) / 2, Math.random() * 2);
-      cubeMesh.castShadow = true;
-      cubeMesh.name = "box";
-      this.scene.add(cubeMesh);
-    }
-
-
-
     const light = new DirectionalLight(0xffffff);
     const lightHelper = new DirectionalLightHelper(light, 0.2);
-    light.position.set(-3, 2, -1);
+    light.position.set(1000, 1000, 1000);
     light.target = plane;
     light.castShadow = true;
     this.renderer.shadowMap.enabled = true;
-    this.scene.add(plane, light, lightHelper);
-    document.getElementById("cube-container")?.appendChild(this.renderer.domElement);
+    this.scene.add(light);
+    const loader = new FBXLoader()
+    // this.camera.fov = 120;
+    this.camera.far = 10000;
+    this.camera.position.set(1500, 800, 2000);
+    this.camera.updateProjectionMatrix();
+    loader.load('/assets/model/shanghai.FBX', (scene) => {
+      this.scene.add(scene);
+      scene.traverse(child => {
+        if (child.name === 'CITY_UNTRIANGULATED') {
+          this.setMaterial(child)
+        }
+      })
+    })
+    document.getElementById("shanghai-container")?.appendChild(this.renderer.domElement);
     this.renderer.setAnimationLoop(this.animation.bind(this));
+
+
+  }
+
+  setMaterial(mesh: any) {
+    mesh.geometry.computeBoundingBox();
+    mesh.geometry.computeBoundingSphere();
+
+    const {
+      geometry
+    } = mesh;
+
+    // 获取geometry的长宽高 中心点
+    const {
+      center,
+      radius
+    } = geometry.boundingSphere;
+
+    const {
+      max,
+      min
+    } = geometry.boundingBox;
+
+    const size = new Vector3(
+      max.x - min.x,
+      max.y - min.y,
+      max.z - min.z
+    );
+
+
+    mesh.material = new ShaderMaterial({
+      uniforms: {
+        uOpacity: {
+          value: 1
+        },
+        uTime: {
+          value: 0.1
+        },
+        uSize: {
+          value: size
+        },
+        scanColor: { value: new Color(0x00ff00) }  // 扫描颜色
+      },
+      vertexShader: this.vertexShader,
+      fragmentShader: this.fragmentShader,
+    })
 
   }
 
   animation() {
     this.scene.traverse(function (object: any) {
-      if (object.name === 'box') {
-
+      if (object.name === 'CITY_UNTRIANGULATED') {
         object.material.uniforms.uTime.value += 0.02
 
       }
     });
     this.renderer.render(this.scene, this.camera);
   }
+
+
 
 
 }
