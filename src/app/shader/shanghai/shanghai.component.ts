@@ -55,6 +55,7 @@ export class ShanghaiComponent implements OnInit {
                         }`;
   fragmentShader: string = `
                         //fragmentShader
+                        #define PI 3.1415926535897932384626433832795
                         precision lowp float;
                         uniform vec3 scanColor;
                         varying vec2 vUv;
@@ -63,21 +64,17 @@ export class ShanghaiComponent implements OnInit {
                         varying vec3 vPosition;
                         varying vec3 vNormal;
                         void main() {
+                          float dTime = mod(uTime * 25.0, uSize.z); 
+                          vec3 distColor = vec3(0.5, 0.5, 0.5);
+                            float topY = vPosition.z + 10.0;
+                            if (dTime > vPosition.z && dTime < topY) {
+                                
+                                float dIndex = sin((topY - dTime) / 10.0 * PI);
+
+                                distColor = mix(distColor, scanColor,  dIndex); 
+                            }
                           
-                          float y = (vPosition.z / uSize.z);
-                          float color = sin(vUv.y + uTime * 0.3);
-                          // color = mod(color, 1.0);
-                          // color = step(0.02, color);
-                          if(y < 0.001 || y > 0.99) 
-                          color = 1.0;
-                          // float alpha = 1.0 - sin(vUv.y) * 0.7;
-
-                          vec3 lightDirection = normalize(vec3(0.9, 1.0, 0.8)); // 光源方向
-                          float lightIntensity = max(dot(vNormal, lightDirection), 0.0); // 光照强度
-                          vec3 lightColor = vec3(1.0, 1.0, 1.0); // 光源颜色
-
-                          vec3 finalColor = vec3(color, 1.0, color) * lightColor * lightIntensity;
-                          gl_FragColor = vec4(finalColor, 1.0);
+                          gl_FragColor = vec4(vec3(distColor), 1.0);
                           
                         }
                       `
@@ -160,7 +157,7 @@ export class ShanghaiComponent implements OnInit {
       max.z - min.z
     );
 
-
+    console.log(size)
     mesh.material = new ShaderMaterial({
       uniforms: {
         uOpacity: {
