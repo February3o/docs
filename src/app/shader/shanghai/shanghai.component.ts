@@ -25,6 +25,7 @@ import {
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader"
 // import vertexShader from '!!raw-loader!../glsl/cube-glsl/vertexShader.glsl';
+const meshName = "CITY_UNTRIANGULATED";
 
 @Component({
   selector: 'app-shanghai',
@@ -120,10 +121,10 @@ export class ShanghaiComponent implements OnInit {
     this.camera.far = 10000;
     this.camera.position.set(1500, 800, 2000);
     this.camera.updateProjectionMatrix();
-    loader.load('../../../assets/model/shanghai.FBX', (scene) => { //
+    loader.load('assets/model/shanghai.FBX', (scene) => { //
       this.scene.add(scene);
       scene.traverse(child => {
-        if (child.name === 'CITY_UNTRIANGULATED') {
+        if (child.name === meshName) {
           this.setMaterial(child)
         }
       })
@@ -181,15 +182,12 @@ export class ShanghaiComponent implements OnInit {
 
   animation() {
     this.scene.traverse(function (object: any) {
-      if (object.name === 'CITY_UNTRIANGULATED') {
+      if (object.name === meshName) {
         object.material.uniforms.uTime.value += 0.02
 
       }
     });
     this.renderer.render(this.scene, this.camera);
   }
-
-
-
 
 }
