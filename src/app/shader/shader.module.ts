@@ -9,6 +9,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CubeComponent } from './cube/cube.component';
 import { ThreeService } from '../service/three.service';
 import { ShanghaiComponent } from './shanghai/shanghai.component';
+import { RoomComponent } from './room/room.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ShanghaiComponent } from './shanghai/shanghai.component';
     StarComponent,
     ShaderComponent,
     CubeComponent,
-    ShanghaiComponent
+    ShanghaiComponent,
+    RoomComponent
   ],
   imports: [
     CommonModule,

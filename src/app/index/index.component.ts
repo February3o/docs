@@ -18,21 +18,15 @@ export class IndexComponent implements OnInit {
       easing: 'easeInOutQuad'
     });
 
-    anime({
-      targets: '.card-container .card',
-      scale: [
-        { value: .01, easing: 'easeOutSine', duration: 600 },
-        { value: 1, easing: 'easeOutSine', duration: 600 }
-      ],
-      delay: anime.stagger(200, { from: 'first' })
-    });
-
     // anime({
-    //   targets: '',
-    //   translateX: -270,
-    //   rotate: anime.stagger([-360, 360]),
-    //   easing: 'easeInOutQuad'
+    //   targets: '.card-container .card',
+    //   scale: [
+    //     { value: .01, easing: 'easeOutSine', duration: 600 },
+    //     { value: 1, easing: 'easeOutSine', duration: 600 }
+    //   ],
+    //   delay: anime.stagger(200, { from: 'first' })
     // });
+
   }
 
 }
