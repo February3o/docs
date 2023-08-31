@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import anime from 'animejs/lib/anime.es.js';
 
 @Component({
@@ -8,7 +9,7 @@ import anime from 'animejs/lib/anime.es.js';
 })
 export class IndexComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     anime({

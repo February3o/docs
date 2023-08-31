@@ -18,8 +18,8 @@ export class ThreeService {
   camera!: PerspectiveCamera;
   clock!: Clock;
   orbit_controls!: OrbitControls;
-  domWidth: number = window.innerWidth - 20;
-  domHeight: number = window.innerHeight - 20;
+  domWidth: number = window.innerWidth;
+  domHeight: number = window.innerHeight;
 
   constructor() { }
 

@@ -154,7 +154,7 @@ export class RoomComponent implements OnInit {
     })
     const sphereMesh2 = new Mesh(sphere2, sphereMaterial2);
     sphereMesh2.position.set(-32, 0, 0);
-    sphereMesh2.rotation.y = Math.PI / 2;
+    sphereMesh2.rotation.y = Math.PI * 3 / 5;
     this.scene.add(sphereMesh2)
 
     const sphere3 = new SphereGeometry(16, 50, 50);
@@ -164,7 +164,7 @@ export class RoomComponent implements OnInit {
     })
     const sphereMesh3 = new Mesh(sphere3, sphereMaterial3);
     sphereMesh3.position.set(32, 0, 0);
-    sphereMesh3.rotation.y = Math.PI / 2;
+    sphereMesh3.rotation.y = Math.PI * 4 / 5;
     this.scene.add(sphereMesh3)
 
     this.camera.position.x = -5;
