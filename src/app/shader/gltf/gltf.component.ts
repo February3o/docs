@@ -50,6 +50,7 @@ export class GltfComponent implements OnInit {
     this.updaetScene();
     this.renderer.render(this.scene, this.camera);
     this.orbit_controls.update()
+    this.renderer.setPixelRatio(window.devicePixelRatio);
 
     window.addEventListener('resize', () => {
       // 更新渲染
@@ -103,7 +104,7 @@ export class GltfComponent implements OnInit {
     })
     gltfLoader.load('assets/model/gltf/车位车辆.glb', (gltf) => {
       this.scene.add(gltf.scene)
-      const R = 100
+      const R = 50
       const tween = new Tween({angle: 0})
       .to({angle: Math.PI*(1-1/4)}, 8000)
       .onUpdate((obj)=> {
