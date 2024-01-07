@@ -25,7 +25,9 @@ export class ThreeService {
 
   init() {
     this.scene = new Scene();
-    this.renderer = new WebGLRenderer({ antialias: true });
+    this.renderer = new WebGLRenderer({ antialias: true,
+                                        logarithmicDepthBuffer: true
+                                      });
     this.camera = new PerspectiveCamera();
     this.clock = new Clock();
     this.orbit_controls = new OrbitControls(this.camera, this.renderer.domElement);

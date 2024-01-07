@@ -50,16 +50,17 @@ export class GltfComponent implements OnInit {
     this.updaetScene();
     this.renderer.render(this.scene, this.camera);
     this.orbit_controls.update()
+    this.renderer.setClearColor(0x001122, 1);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
-    window.addEventListener('resize', () => {
-      // 更新渲染
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      // 更新相机
-      this.camera.aspect = window.innerWidth / window.innerHeight;
-      this.camera.updateProjectionMatrix();
-    });
+    // window.addEventListener('resize', () => {
+    //   // 更新渲染
+    //   this.renderer.setSize(window.innerWidth, window.innerHeight);
+    //   this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    //   // 更新相机
+    //   this.camera.aspect = window.innerWidth / window.innerHeight;
+    //   this.camera.updateProjectionMatrix();
+    // });
   }
 
   updaetScene() {
@@ -121,7 +122,7 @@ export class GltfComponent implements OnInit {
     this.scene.add(ambient);
 
 
-    this.scene.fog = new Fog(0x001122, 10, 600);
+   // this.scene.fog = new Fog(0x001122, 10, 600);
     this.camera.position.set(100, 50, 0);
     this.camera.lookAt(new Vector3(0, 0, 0));
 
