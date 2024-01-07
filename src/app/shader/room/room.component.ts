@@ -201,6 +201,11 @@ export class RoomComponent implements OnInit {
     // await sleep(1600);
     // data.currentRoom = room.key;
   }
+  //generate a function array sor that can be use to
+  //generate a radom number between 1 and 100
+  sort() {
+    for (let i = 0; i < 100; i++) {
 
-
+    }
+  }
 }

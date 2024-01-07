@@ -168,5 +168,8 @@ export class CubeComponent implements OnInit {
     this.renderer.render(this.scene, this.camera);
   }
 
+  //写一个排序算法
+
+
 
 }
