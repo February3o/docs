@@ -11,8 +11,11 @@ import {
   TextureLoader,
   BackSide,
   AmbientLight,
+  SpriteMaterial,
+  Sprite,
   Fog,
-  Vector2
+  Vector2,
+  Group
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Easing, Tween, update } from "three/examples/jsm/libs/tween.module.js"
@@ -20,8 +23,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-
-
 
 @Component({
   selector: 'app-gltf',
@@ -63,7 +64,7 @@ export class GltfComponent implements OnInit {
     // });
   }
 
-  updaetScene() {
+  async updaetScene() {
 
     const gltfLoader = new GLTFLoader();
     gltfLoader.load('assets/model/gltf/road.glb', (gltf) => {
@@ -117,12 +118,37 @@ export class GltfComponent implements OnInit {
       this.initBloom()
     })
 
+    const texture = await new TextureLoader().load('assets/map/snow.png')
+    const spriteMaterial = new SpriteMaterial({
+        map: texture,
+        transparent: true
+        // color: 0x00ff00
+    })
+
+    // const sprite: any = new Sprite(spriteMaterial)
+    // sprite.position.set(0,600,0)
+    // sprite.scale.set(10,10,10)
+    // this.scene.add(sprite)
+    var spriteGroup = new Group()
+    spriteGroup.name = "sprite";
+    for(let i=0; i<10000; i++) {
+        var sprite = new Sprite(spriteMaterial)
+        var x = Math.random()*300-150;
+        var y = Math.random()*300;
+        var z = Math.random()*300-150;
+
+            sprite.position.set(x,y,z)
+            sprite.scale.set(0.5,0.5,0.5)
+            spriteGroup.add(sprite)
+    }
+    this.scene.add(spriteGroup)
+
     //环境光
     const ambient = new AmbientLight(0xffffff, 0.4);
     this.scene.add(ambient);
 
 
-    this.scene.fog = new Fog(0x001122, 10, 600);
+    //this.scene.fog = new Fog(0x001122, 10, 600);
     this.camera.position.set(100, 50, 0);
     this.camera.lookAt(new Vector3(0, 0, 0));
 
@@ -137,6 +163,16 @@ export class GltfComponent implements OnInit {
   }
 
   animation() {
+    const sprite = this.scene.getObjectByName("sprite");
+    sprite?.children.forEach(s => {
+      s.position.y -= 1;
+      // sprite.rotateX(Math.PI/5);
+      s.rotation.z += 0.01;
+      if( s.position.y < 0) {
+        s.position.y = 300
+      }
+     })
+
     this.orbit_controls && this.orbit_controls.update();
     update()
     if (this.composer)
