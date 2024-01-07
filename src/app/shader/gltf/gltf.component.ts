@@ -122,7 +122,7 @@ export class GltfComponent implements OnInit {
     this.scene.add(ambient);
 
 
-   // this.scene.fog = new Fog(0x001122, 10, 600);
+    this.scene.fog = new Fog(0x001122, 10, 600);
     this.camera.position.set(100, 50, 0);
     this.camera.lookAt(new Vector3(0, 0, 0));
 
