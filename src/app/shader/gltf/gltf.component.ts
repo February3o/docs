@@ -105,9 +105,9 @@ export class GltfComponent implements OnInit {
     })
     gltfLoader.load('assets/model/gltf/车位车辆.glb', (gltf) => {
       this.scene.add(gltf.scene)
-      const R = 50
+      const R = 100
       const tween = new Tween({angle: 0})
-      .to({angle: Math.PI*(1-1/4)}, 8000)
+      .to({angle: Math.PI*(1-1/6)}, 8000)
       .onUpdate((obj)=> {
           this.camera.position.x = R*Math.cos(obj.angle)
           this.camera.position.z = R*Math.sin(obj.angle)
