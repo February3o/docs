@@ -45,7 +45,7 @@ export class ThreeService {
   }
 
   private _initScene() {
-    this.scene.background = new Color(0x000000);
+    //this.scene.background = new Color(0x000000);
   }
 
   private _initCamera() {
