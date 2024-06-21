@@ -6,6 +6,7 @@ import { CubeComponent } from './cube/cube.component';
 import { ShanghaiComponent } from './shanghai/shanghai.component';
 import { RoomComponent } from './room/room.component';
 import { GltfComponent } from './gltf/gltf.component';
+import { PointComponent } from './point/point.component';
 const routes: Routes = [
   // {
   //   path: '', redirectTo: '/', pathMatch: 'full',
@@ -33,6 +34,10 @@ const routes: Routes = [
       {
         path: "gltf",
         component: GltfComponent
+      },
+      {
+        path: "point",
+        component: PointComponent
       }
     ]
   },

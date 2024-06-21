@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ThreeService } from 'src/app/service/three.service';
 import {
   Clock,
@@ -15,7 +15,8 @@ import {
   Sprite,
   Fog,
   Vector2,
-  Group
+  Group,
+  Raycaster
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Easing, Tween, update } from "three/examples/jsm/libs/tween.module.js"
@@ -37,6 +38,8 @@ export class GltfComponent implements OnInit {
   clock!: Clock;
   orbit_controls!: OrbitControls;
   composer!: EffectComposer;
+  pointer!: Vector2;
+  raycaster!: Raycaster;
 
   constructor(private threeService: ThreeService) { }
 
@@ -62,6 +65,8 @@ export class GltfComponent implements OnInit {
     //   this.camera.aspect = window.innerWidth / window.innerHeight;
     //   this.camera.updateProjectionMatrix();
     // });
+    this.raycaster = new Raycaster();
+    // window.addEventListener( 'click', this.onPointerClick );
   }
 
   async updaetScene() {
@@ -80,6 +85,21 @@ export class GltfComponent implements OnInit {
       this.scene.add(gltf.scene)
     })
     gltfLoader.load('assets/model/gltf/building_D.glb', (gltf) => {
+      const opacityMaterial = new MeshBasicMaterial({
+        color:0x00beff,
+        transparent:true,
+        opacity:.1,
+        //开启线框
+        wireframe:true
+      })
+      console.log(123,gltf);
+
+
+      gltf.scene.traverse((e: any) => {
+        if(e.name.indexOf('camera') == -1 && e.name.indexOf('electricity') == -1)
+         e.material = opacityMaterial;
+      })
+
       this.scene.add(gltf.scene)
     })
     gltfLoader.load('assets/model/gltf/building_Park.glb', (gltf) => {
@@ -105,17 +125,17 @@ export class GltfComponent implements OnInit {
       this.scene.add(gltf.scene)
     })
     gltfLoader.load('assets/model/gltf/车位车辆.glb', (gltf) => {
-      this.scene.add(gltf.scene)
-      const R = 100
-      const tween = new Tween({angle: 0})
-      .to({angle: Math.PI*(1-1/6)}, 8000)
-      .onUpdate((obj)=> {
-          this.camera.position.x = R*Math.cos(obj.angle)
-          this.camera.position.z = R*Math.sin(obj.angle)
-          this.camera.lookAt(0, 0, 0);
-      })
-      tween.start();
-      this.initBloom()
+      // this.scene.add(gltf.scene)
+      // const R = 100
+      // const tween = new Tween({angle: 0})
+      // .to({angle: Math.PI*(1-1/6)}, 8000)
+      // .onUpdate((obj)=> {
+      //     this.camera.position.x = R*Math.cos(obj.angle)
+      //     this.camera.position.z = R*Math.sin(obj.angle)
+      //     this.camera.lookAt(0, 0, 0);
+      // })
+      // tween.start();
+      // this.initBloom()
     })
 
     const texture = await new TextureLoader().load('assets/map/snow.png')
@@ -125,23 +145,19 @@ export class GltfComponent implements OnInit {
         // color: 0x00ff00
     })
 
-    // const sprite: any = new Sprite(spriteMaterial)
-    // sprite.position.set(0,600,0)
-    // sprite.scale.set(10,10,10)
-    // this.scene.add(sprite)
-    var spriteGroup = new Group()
-    spriteGroup.name = "sprite";
-    for(let i=0; i<10000; i++) {
-        var sprite = new Sprite(spriteMaterial)
-        var x = Math.random()*300-150;
-        var y = Math.random()*300;
-        var z = Math.random()*300-150;
+    // var spriteGroup = new Group()
+    // spriteGroup.name = "sprite";
+    // for(let i=0; i<10000; i++) {
+    //     var sprite = new Sprite(spriteMaterial)
+    //     var x = Math.random()*300-150;
+    //     var y = Math.random()*300;
+    //     var z = Math.random()*300-150;
 
-            sprite.position.set(x,y,z)
-            sprite.scale.set(0.5,0.5,0.5)
-            spriteGroup.add(sprite)
-    }
-    this.scene.add(spriteGroup)
+    //         sprite.position.set(x,y,z)
+    //         sprite.scale.set(0.5,0.5,0.5)
+    //         spriteGroup.add(sprite)
+    // }
+    // this.scene.add(spriteGroup)
 
     //环境光
     const ambient = new AmbientLight(0xffffff, 0.4);
@@ -161,6 +177,27 @@ export class GltfComponent implements OnInit {
 
 
   }
+  @HostListener('window:click',['$event'])
+  onPointerClick(event: any) {
+    const pointer = new Vector2()
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    console.log(pointer);
+    this.raycasterFun(pointer)
+  }
+
+  raycasterFun(pointer: Vector2) {
+    this.raycaster.setFromCamera(pointer, this.camera);
+    let intersects = this.raycaster.intersectObject(this.scene)
+    const activeObj = intersects.length > 0 ? intersects[0] : null;
+    if(activeObj) {
+      console.log(activeObj.object.parent?.name);
+
+    }
+  }
+
+
 
   animation() {
     const sprite = this.scene.getObjectByName("sprite");
@@ -177,15 +214,18 @@ export class GltfComponent implements OnInit {
     update()
     if (this.composer)
       this.composer.render();
-    else
+    else {
+
       this.renderer.render(this.scene, this.camera);
+    }
+
   }
 
   initBloom() {
     const renderScene = new RenderPass(this.scene, this.camera);
 
     const bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-    bloomPass.threshold = 0.6;
+    bloomPass.threshold = 0.4;
     bloomPass.strength = 1.5;
     bloomPass.radius = 0.4;
 
@@ -194,4 +234,20 @@ export class GltfComponent implements OnInit {
     this.composer.addPass(bloomPass);
   }
 
+  aciveBuildA() {
+    this.scene.traverse(gltf => {
+      if(gltf.name == 'buildingD') {
+        console.log('look at');
+        const R = 100
+         const tween = new Tween({angle: 0})
+                  .to({angle: Math.PI*(1/4)}, 2000)
+                  .onUpdate((obj)=> {
+                      this.camera.position.x = R*Math.cos(obj.angle)
+                      this.camera.position.z = R*Math.sin(obj.angle)
+                      this.camera.lookAt(gltf.position);
+                  })
+                  tween.start();
+      }
+    })
+  }
 }

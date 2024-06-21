@@ -43,21 +43,21 @@ export class HomeComponent implements OnInit {
     const gltfLoader = new GLTFLoader();
 
     const textureLoader = new TextureLoader();
-    const texture = textureLoader.load('assets/model/glb/baked1.jpg')
+    const texture = textureLoader.load('assets/model/room/baked1.jpg')
     texture.flipY = false;
     texture.colorSpace = SRGBColorSpace;
     const material = new MeshBasicMaterial({map: texture, side: DoubleSide})
 
-    const desktop0 = textureLoader.load('assets/model/glb/desktop0.png')
+    const desktop0 = textureLoader.load('assets/model/room/desktop0.png')
     desktop0.colorSpace = SRGBColorSpace;
     desktop0.offset.y = 0.001;
     const desktopMaterial1 = new MeshBasicMaterial({map: desktop0})
 
-    const desktop1 = textureLoader.load('assets/model/glb/desktop1.png')
+    const desktop1 = textureLoader.load('assets/model/room/desktop1.png')
     desktop1.colorSpace = SRGBColorSpace;
     const desktopMaterial0 = new MeshBasicMaterial({map: desktop1})
 
-    gltfLoader.load('assets/model/glb/room.glb', (gltf) => {
+    gltfLoader.load('assets/model/room/room.glb', (gltf) => {
 
       gltf.scene.traverse((e: any) => {
       if(e.name !== 'desktop-plane-0' && e.name !== 'desktop-plane-1') {
@@ -90,30 +90,35 @@ export class HomeComponent implements OnInit {
       })
       this.scene.add(gltf.scene)
     })
-    const texture2 = textureLoader.load('assets/model/glb/shadow-baked.jpg')
+    const texture2 = textureLoader.load('assets/model/room/shadow-baked.jpg')
     texture2.flipY = false;
     texture2.colorSpace = SRGBColorSpace;
     const material2 = new MeshBasicMaterial({map: texture2,side: DoubleSide})
-    gltfLoader.load('assets/model/glb/shadow-model.glb', (gltf) => {
+    gltfLoader.load('assets/model/room/shadow-model.glb', (gltf) => {
       // gltf.scene.traverse((e: any) => {
       //   e.material = material2;
       // })
       //this.scene.add(gltf.scene)
     })
-    gltfLoader.load('assets/model/glb/shadow-model1.glb', (gltf) => {
+    gltfLoader.load('assets/model/room/shadow-model1.glb', (gltf) => {
 
       // gltf.scene.traverse((e: any) => {
       //     e.material = material2;
       // })
       // this.scene.add(gltf.scene)
     })
-    gltfLoader.load('assets/model/glb/shadow-model2.glb', (gltf) => {
+    gltfLoader.load('assets/model/room/shadow-model2.glb', (gltf) => {
       gltf.scene.traverse((e: any) => {
         e.material = material2;
     })
       this.scene.add(gltf.scene)
     })
-    console.log(this.scene);
+
+    gltfLoader.load('assets/model/hz/map001_buildings.068.bin', (gltf) => {
+      console.log('hz',gltf);
+
+      // this.scene.add(gltf.scene)
+    })
 
     const ambient = new AmbientLight(0xffffff, 0.4);
     this.scene.add(ambient);
